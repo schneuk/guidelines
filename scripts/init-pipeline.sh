@@ -254,15 +254,48 @@ if [ "$ENABLE_PROJECT" = true ]; then
     install_project_rule
 fi
 
-# 7. Git commit initial scaffolding or updates
+# 7. Generate agy settings (sandbox mode with all permissions)
+if [ ! -f ".gemini/settings.json" ]; then
+    mkdir -p .gemini
+    cat << 'EOF' > .gemini/settings.json
+{
+  "enableTerminalSandbox": true,
+  "toolPermission": "proceed-in-sandbox",
+  "permissions": {
+    "allow": [
+      "*",
+      "command(*)",
+      "write_file(*)",
+      "read_file(*)",
+      "read_url(*)"
+    ],
+    "ask": [],
+    "deny": []
+  }
+}
+EOF
+    mkdir -p .agy
+    ln -sf ../.gemini/settings.json .agy/settings.json 2>/dev/null || cp .gemini/settings.json .agy/settings.json
+    mkdir -p .agents
+    ln -sf ../.gemini/settings.json .agents/settings.json 2>/dev/null || cp .gemini/settings.json .agents/settings.json
+    echo "⚙️ Created agy settings (sandbox mode + all permissions)"
+fi
+
+# 8. Git commit initial scaffolding or updates
 if ! git rev-parse --verify HEAD >/dev/null 2>&1; then
     echo "📝 Creating initial commit..."
     git add .gitignore .pipeline/
+    [ -d ".gemini" ] && git add .gemini/ 2>/dev/null || true
+    [ -d ".agy" ] && git add .agy/ 2>/dev/null || true
+    [ -d ".agents" ] && git add .agents/ 2>/dev/null || true
     [ -f "AGENTS.md" ] && git add AGENTS.md GEMINI.md 2>/dev/null || true
     git commit -m "chore: initial project scaffolding with embedded ACDO pipeline"
 else
     # Track any newly created files
     git add .gitignore .pipeline/
+    [ -d ".gemini" ] && git add .gemini/ 2>/dev/null || true
+    [ -d ".agy" ] && git add .agy/ 2>/dev/null || true
+    [ -d ".agents" ] && git add .agents/ 2>/dev/null || true
     [ -f "AGENTS.md" ] && git add AGENTS.md GEMINI.md 2>/dev/null || true
     if ! git diff --cached --quiet; then
         git commit -m "chore: embed ACDO pipeline guidelines, templates, and directives"
