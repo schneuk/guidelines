@@ -105,25 +105,32 @@ To enable continuous autonomous engineering on an existing or new project (e.g. 
 
 ### Automated Setup via `init-pipeline.sh`
 
-The initialization script supports both **Project-level** and **Global** discovery modes via CLI flags:
+The initialization script includes an **Interactive Wizard** with automatic path validation, folder conflict detection, and a resource creation recap:
 
 ```bash
-# Option 1: Standard project setup (creates AGENTS.md / GEMINI.md in project root)
+# Option 1: Interactive Wizard (prompts for mode, path verification, and recap confirmation)
+/home/laurent/Dev/app-factory/guidelines/scripts/init-pipeline.sh
+
+# Option 2: Pre-fill project path and name (wizard validates parameters and confirms recap)
 /home/laurent/Dev/app-factory/guidelines/scripts/init-pipeline.sh /path/to/my-project [project-name]
 
-# Option 2: Full setup with both Project-level AGENTS.md and Global ~/.gemini/config/rules/acdo.md
+# Option 3: Full setup with both Project-level AGENTS.md and Global ~/.gemini/config/rules/acdo.md
 /home/laurent/Dev/app-factory/guidelines/scripts/init-pipeline.sh --both /path/to/my-project [project-name]
 
-# Option 3: Install/update Global Antigravity rule only (applies to all .pipeline/ repos)
+# Option 4: Install/update Global Antigravity rule only (applies to all .pipeline/ repos)
 /home/laurent/Dev/app-factory/guidelines/scripts/init-pipeline.sh --global
+
+# Option 5: Non-interactive automated execution (skips interactive confirmation)
+/home/laurent/Dev/app-factory/guidelines/scripts/init-pipeline.sh -y /path/to/my-project [project-name]
 ```
 
 #### Script Flags Reference:
-* `-p, --project` : Generate `AGENTS.md` and `GEMINI.md` in the project root for automatic native Antigravity discovery *(default: enabled)*.
-* `-g, --global`  : Install or update the global Antigravity rule in `~/.gemini/config/rules/acdo.md`.
-* `-b, --both`    : Apply both project-level directives and global rule.
-* `--no-project`  : Skip generating `AGENTS.md` in the project root (when relying only on global rules).
-* `-h, --help`    : Display script usage instructions.
+* `-p, --project`        : Generate `AGENTS.md` and `GEMINI.md` in the project root for automatic native Antigravity discovery *(default: enabled)*.
+* `-g, --global`         : Install or update the global Antigravity rule in `~/.gemini/config/rules/acdo.md`.
+* `-b, --both`           : Apply both project-level directives and global rule.
+* `--no-project`         : Skip generating `AGENTS.md` in the project root (when relying only on global rules).
+* `-y, --non-interactive`: Run headless without prompting for confirmation.
+* `-h, --help`           : Display script usage instructions.
 
 ---
 
